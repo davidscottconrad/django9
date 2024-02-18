@@ -20,5 +20,5 @@ from ninthdjango import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('items/', views.list)
+    path('items', views.list)
 ]
