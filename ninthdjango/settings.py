@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'ninthdjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if "DATABASE_SECRET" in environ:
+if "DATABASE_URL" in environ:
     database_secret = environ.get("DATABASE_SECRET")
     db_url = json.loads(database_secret)["DATABASE_URL"]
     DATABASES = {"default": dj_database_url.parse(db_url)}
