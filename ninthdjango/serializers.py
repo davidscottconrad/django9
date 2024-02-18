@@ -4,4 +4,4 @@ from .models import MyModel
 class MyModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyModel
-        fields = '__all__'  # Or list specific fields you want to include
+        fields = ['id', 'my_field']  # Or list specific fields you want to include
