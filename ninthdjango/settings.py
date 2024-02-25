@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ninthdjango',
     'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    'https://faanpz6hhp.us-east-2.awsapprunner.com',
+    'https://main.dnbfl0efjxfzm.amplifyapp.com'
 ]
 
 ROOT_URLCONF = 'ninthdjango.urls'
