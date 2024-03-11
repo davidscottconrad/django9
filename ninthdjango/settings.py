@@ -16,6 +16,9 @@ import dj_database_url
 from os import environ
 if "DATABASE_URL" not in environ:
     from decouple import config
+import logging
+
+logger = logging.getLogger(__name__)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -161,7 +164,7 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #AWS Config
-
+logger.info(f"AWS_STORAGE_BUCKET_NAME: {environ.get('AWS_STORAGE_BUCKET_NAME')}")
 
 if "DATABASE_URL" in environ:
     AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
