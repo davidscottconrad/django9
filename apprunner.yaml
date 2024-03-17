@@ -9,13 +9,6 @@ run:
   command: sh startup.sh
   network:
     port: 8000
-  health-check:
-    path: /health-check/
-    protocol: HTTP
-    interval: 10
-    timeout: 5
-    healthy-threshold: 2
-    unhealthy-threshold: 5
   secrets:
     - name: DATABASE_URL
       value-from: "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
