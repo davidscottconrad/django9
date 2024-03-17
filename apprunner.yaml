@@ -12,3 +12,9 @@ run:
   secrets:
     - name: DATABASE_URL
       value-from: "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
+    # - name: AWS_STORAGE_BUCKET_NAME
+    #   value-from: "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
+    # - name: AWS_SECRET_ACCESS_KEY
+    #   value-from: "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
+    # - name: AWS_ACCESS_KEY_ID
+    #   value-from: "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"

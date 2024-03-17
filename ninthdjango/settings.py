@@ -14,6 +14,24 @@ from pathlib import Path
 import json
 import dj_database_url
 from os import environ
+if "DATABASE_URL" not in environ:
+    from decouple import config
+if "DATABASE_URL" in environ:
+    
+    import boto3
+
+    def get_secret(secret_arn):
+        session = boto3.Session()
+        secrets_manager = session.client('secretsmanager')
+        secret_value = secrets_manager.get_secret_value(SecretId=secret_arn)
+        return json.loads(secret_value['SecretString'])
+    SECRET_ARN = "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
+    secrets = get_secret(SECRET_ARN)
+    AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = secrets['AWS_STORAGE_BUCKET_NAME']
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,13 +169,26 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     },
 }
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#AWS Config
+
+
+if "DATABASE_URL" not in environ:
+
+    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
