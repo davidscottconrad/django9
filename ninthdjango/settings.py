@@ -14,6 +14,8 @@ from pathlib import Path
 import json
 import dj_database_url
 from os import environ
+if "DATABASE_URL" not in environ:
+    from decouple import config
 if "DATABASE_URL" in environ:
     from decouple import config
     import boto3
