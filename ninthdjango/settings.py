@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'ninthdjango',
     'rest_framework',
     'corsheaders',
+        'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
 ]
 
 MIDDLEWARE = [
