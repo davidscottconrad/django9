@@ -18,8 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from ninthdjango import views
 from ninthdjango import video_views
-
+from django.urls import path, include
 urlpatterns = [
+    path('health-check/', include('health_check.urls')),
     path('admin/', admin.site.urls),
     path('items', views.list),
     path('video/', video_views.retrieve_video, name='retrieve_video'),
