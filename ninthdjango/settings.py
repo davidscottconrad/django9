@@ -17,7 +17,7 @@ from os import environ
 if "DATABASE_URL" not in environ:
     from decouple import config
 if "DATABASE_URL" in environ:
-    from decouple import config
+    
     import boto3
 
     def get_secret(secret_arn):
