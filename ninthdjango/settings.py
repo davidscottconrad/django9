@@ -16,6 +16,15 @@ import dj_database_url
 from os import environ
 if "DATABASE_URL" not in environ:
     from decouple import config
+    import boto3
+
+    def get_secret(secret_arn):
+        session = boto3.Session()
+        secrets_manager = session.client('secretsmanager')
+        secret_value = secrets_manager.get_secret_value(SecretId=secret_arn)
+        return json.loads(secret_value['SecretString'])
+    SECRET_ARN = "arn:aws:secretsmanager:us-east-2:717169761416:secret:django9rds-tOK3hE"
+    secrets = get_secret(SECRET_ARN)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -165,9 +174,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 if "DATABASE_URL" in environ:
-    AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = secrets['AWS_STORAGE_BUCKET_NAME']
     AWS_S3_FILE_OVERWRITE = False
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
