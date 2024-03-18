@@ -19,3 +19,15 @@ RUN /usr/local/bin/python -m pip install --upgrade pip
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
+
+# Copy the rest of the application code to the container
+COPY . .
+
+# Copy the startup script into the container
+COPY startup.sh .
+
+# Ensure the script is executable
+RUN chmod +x startup.sh
+
+# Start the application using the startup script
+CMD ["./startup.sh"]
