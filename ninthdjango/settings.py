@@ -31,7 +31,7 @@ if "DATABASE_URL" in environ:
     DEBUG = False
 
 else: 
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = ['localhost']
     DEBUG = True
 
 # Application definition
@@ -102,8 +102,8 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'usersdb', 
             'USER': 'admin', 
-            'PASSWORD': 'password',
-            'HOST': '127.0.0.1', 
+            'PASSWORD': 'mypassword',
+            'HOST': 'db', 
             'PORT': '5432',
         }
     }
