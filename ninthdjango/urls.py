@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from ninthdjango import views
+from ninthdjango import VideoView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('items', views.list)
+    path('items', views.list),
+    path('video/', VideoView.upload_video, name='upload_video'),
 ]

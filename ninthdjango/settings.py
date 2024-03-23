@@ -14,7 +14,11 @@ from pathlib import Path
 import json
 import dj_database_url
 from os import environ
+import os
+from environs import Env
 
+env = Env()
+env.read_env() 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,11 +31,11 @@ SECRET_KEY = 'django-insecure-7tebto2_*=9k&@l3ctz1#hfrf(zqi&r)n-+ujd41sm**c3f2*)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if "DATABASE_URL" in environ:
-    ALLOWED_HOSTS = [".awsapprunner.com"]
+    ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me/"]
     DEBUG = False
 
 else: 
-    ALLOWED_HOSTS = ['localhost']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DEBUG = True
 
 # Application definition
@@ -147,7 +151,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": 'storages.backends.s3boto3.S3Boto3Storage',
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -157,3 +161,14 @@ STORAGES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+if "DATABASE_URL" in environ:
+    AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME')
+else: 
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
