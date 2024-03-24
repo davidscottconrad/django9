@@ -166,7 +166,6 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-print(f"print working")
 
 if "DATABASE_URL" in environ:
     AWS_ACCESS_KEY_ID = json.loads(secrets)["AWS_ACCESS_KEY_ID"]

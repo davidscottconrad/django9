@@ -22,5 +22,5 @@ from ninthdjango import VideoView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('items', views.list),
-    path('video/', VideoView.upload_video, name='upload_video'),
+    path('video/', VideoView.upload_video, name='video'),
 ]
