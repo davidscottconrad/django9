@@ -6,7 +6,7 @@ services:
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     container_name: netflax-backend
     volumes:
-      - .:/netflax-backend
+      - /home/david/django-ec2/ninth-try-django/ninthdjango:/ninthdjango
     ports:
       - "8000:8000"
   db:

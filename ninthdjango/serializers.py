@@ -14,3 +14,7 @@ class VideoUploadSerializer(serializers.Serializer):
     video = serializers.FileField()
     photo = serializers.ImageField()
     
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ['id', 'name', 'description', 'video_url', 'photo_url']

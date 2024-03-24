@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import VideoUploadSerializer
+from .serializers import VideoSerializer
 from django.core.files.storage import default_storage
 from .models import Video
 import uuid
@@ -10,7 +11,7 @@ import uuid
 def upload_video(request):
     if request.method == 'GET':
         videos = Video.objects.all()
-        serializer = VideoUploadSerializer(videos, many=True)
+        serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
     if request.method == 'POST':
         serializer = VideoUploadSerializer(data=request.data)
