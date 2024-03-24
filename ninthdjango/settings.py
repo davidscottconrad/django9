@@ -11,10 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import json
 import dj_database_url
 from os import environ
-import os
+import json
 from environs import Env
 
 env = Env()
@@ -27,15 +26,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7tebto2_*=9k&@l3ctz1#hfrf(zqi&r)n-+ujd41sm**c3f2*)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if "DATABASE_URL" in environ:
-    ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me/"]
+    secrets = environ.get("DATABASE_URL")
+    SECRET_KEY = json.loads(secrets)["SECRET_KEY"]
+    ALLOWED_HOSTS = [".awsapprunner.com"]
     DEBUG = False
+    CSRF_COOKIE_SECURE=True
+    SESSION_COOKIE_SECURE=True
 
 else: 
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    SECRET_KEY = env('SECRET_KEY')
+    ALLOWED_HOSTS=['*']
     DEBUG = True
 
 # Application definition
@@ -64,10 +67,14 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     'https://faanpz6hhp.us-east-2.awsapprunner.com',
-    'https://main.dnbfl0efjxfzm.amplifyapp.com'
+    'https://main.dnbfl0efjxfzm.amplifyapp.com',
+    "https://pyhnqwzimi.us-east-2.awsapprunner.com",
+    'https://www.netflax.me',
 ]
 
 ROOT_URLCONF = 'ninthdjango.urls'
@@ -96,8 +103,7 @@ WSGI_APPLICATION = 'ninthdjango.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if "DATABASE_URL" in environ:
-    database_secret = environ.get("DATABASE_URL")
-    db_url = json.loads(database_secret)["DATABASE_URL"]
+    db_url = json.loads(secrets)["DATABASE_URL"]
     DATABASES = {"default": dj_database_url.parse(db_url)}
 else:
     DATABASES = {
@@ -162,12 +168,12 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+print(f"print working")
 
 if "DATABASE_URL" in environ:
-    AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = json.loads(secrets)["AWS_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = json.loads(secrets)["AWS_SECRET_ACCESS_KEY"]
+    AWS_STORAGE_BUCKET_NAME = json.loads(secrets)["AWS_STORAGE_BUCKET_NAME"]
 else: 
     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
