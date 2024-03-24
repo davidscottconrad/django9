@@ -31,10 +31,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if "DATABASE_URL" in environ:
     secrets = environ.get("DATABASE_URL")
     SECRET_KEY = json.loads(secrets)["SECRET_KEY"]
-    ALLOWED_HOSTS = [".awsapprunner.com"]
+    ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me"]
     DEBUG = False
-    CSRF_COOKIE_SECURE=True
-    SESSION_COOKIE_SECURE=True
 
 else: 
     SECRET_KEY = env('SECRET_KEY')
