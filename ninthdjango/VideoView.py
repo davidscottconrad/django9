@@ -6,13 +6,27 @@ from .serializers import VideoSerializer
 from django.core.files.storage import default_storage
 from .models import Video
 import uuid
+from django.http import HttpResponse
 
 @api_view(['GET','POST'])
 def upload_video(request):
     if request.method == 'GET':
-        videos = Video.objects.all()
-        serializer = VideoSerializer(videos, many=True)
-        return Response(serializer.data)
+        video_id = request.query_params.get('id')
+        if video_id:
+            try:
+                video = Video.objects.get(id=video_id)
+                serializer = VideoSerializer(video)
+                video_file = serializer.data['video_file']
+                response = HttpResponse(video_file, content_type='video/mp4')
+                response['Content-Disposition'] = f'attachment; filename="{video.name}.mp4"'
+                return response
+            except Video.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            videos = Video.objects.all()
+            serializer = VideoSerializer(videos, many=True)
+            return Response(serializer.data)
+        
     if request.method == 'POST':
         serializer = VideoUploadSerializer(data=request.data)
         if serializer.is_valid():
