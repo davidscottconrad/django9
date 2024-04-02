@@ -7,14 +7,22 @@ from django.core.files.storage import default_storage
 from .models import Video
 import uuid
 from django.http import HttpResponse
+import logging
+from rest_framework.parsers import MultiPartParser, FormParser
 
+logger = logging.getLogger(__name__)
 @api_view(['GET','POST'])
+# @parser_classes((MultiPartParser, FormParser))
 def upload_video(request):
     if request.method == 'GET':
         video_id = request.query_params.get('id')
+        # info = request.query_params.get('info')
         if video_id:
+            logger.info('hitting if')
             try:
                 video = Video.objects.get(id=video_id)
+                logger.info(f"video id: {video}")
+           
                 serializer = VideoSerializer(video)
                 video_file = serializer.data['video_file']
                 response = HttpResponse(video_file, content_type='video/mp4')
@@ -22,10 +30,38 @@ def upload_video(request):
                 return response
             except Video.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
+        
         else:
-            videos = Video.objects.all()
-            serializer = VideoSerializer(videos, many=True)
-            return Response(serializer.data)
+            logger.warning('Homepage was accessed at hours!')
+            photo = Video.objects.first()
+            serializer = VideoSerializer(photo, context={'video': False})
+            photo_file = serializer.data['video_file']
+            logger.warning(f"Photo file path/URL: {photo_file}")
+            response = HttpResponse(photo_file, content_type='image/png')
+            response['Content-Disposition'] = f'attachment; filename="test.png"'
+            return response
+
+            # video_list = []
+            # for video_data in serializer.data:
+            #     video = {
+            #         'id': video_data['id'],
+            #         'name': video_data['name'],
+            #         'description': video_data['description'],
+            #         'photo_url': video_data['photo_url'],
+            #     }
+            #     # video_file = serializer.data['video_file']
+            #     response = HttpResponse(video_data['photo_url'], content_type='image/png')
+            #     response['Content-Disposition'] = f'attachment; filename="test.jpg"'
+        
+                
+            #     # video_list.append(video)
+            #     video_list.append(response)
+            #     break
+            #     # logger.info(f"data: {video}")
+            #     # photo_file = video.photo.file
+            #     # response.content_type = 'multipart/mixed'
+            #     # response.attach(photo_file.name, photo_file, 'image/png')
+            # return Response(video_list)
         
     if request.method == 'POST':
         serializer = VideoUploadSerializer(data=request.data)
