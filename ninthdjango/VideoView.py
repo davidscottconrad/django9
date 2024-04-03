@@ -23,7 +23,7 @@ def upload_video(request):
                 video = Video.objects.get(id=video_id)
                 logger.info(f"video id: {video}")
            
-                serializer = VideoSerializer(video)
+                serializer = VideoSerializer(video, context={'video': True})
                 video_file = serializer.data['video_file']
                 response = HttpResponse(video_file, content_type='video/mp4')
                 response['Content-Disposition'] = f'attachment; filename="{video.name}.mp4"'
