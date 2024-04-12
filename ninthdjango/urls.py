@@ -24,3 +24,4 @@ urlpatterns = [
     path('items', views.list),
     path('video/', VideoView.upload_video, name='video'),
 ]
+5

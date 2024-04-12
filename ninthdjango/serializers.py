@@ -5,6 +5,8 @@ from .models import Video
 from django.core.files.storage import default_storage
 import logging
 logger = logging.getLogger(__name__)
+import boto3
+from django.conf import settings
 class MyModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyModel
@@ -41,9 +43,11 @@ class VideoSerializer(serializers.ModelSerializer):
             s3_key = photo_url.split('?')[0].split('amazonaws.com/')[1]
 
             # Retrieve the video file from S3 using the S3 key
-            video_file = default_storage.open(s3_key)
+            s3 = boto3.resource('s3')
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+            file_content = s3.Object(bucket_name, s3_key).get()['Body'].read()
           
-            return video_file
+            return file_content
     
     # def get_photo_file(self, obj):
     #     logger.warning(f'video objs',obj)

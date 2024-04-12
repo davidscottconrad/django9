@@ -9,7 +9,9 @@ import uuid
 from django.http import HttpResponse
 import logging
 from rest_framework.parsers import MultiPartParser, FormParser
-
+import base64
+from django.http import JsonResponse
+import json
 logger = logging.getLogger(__name__)
 @api_view(['GET','POST'])
 # @parser_classes((MultiPartParser, FormParser))
@@ -33,12 +35,25 @@ def upload_video(request):
         
         else:
             logger.warning('Homepage was accessed at hours!')
+
             photo = Video.objects.first()
-            serializer = VideoSerializer(photo, context={'video': False})
-            photo_file = serializer.data['video_file']
-            logger.warning(f"Photo file path/URL: {photo_file}")
-            response = HttpResponse(photo_file, content_type='image/png')
-            response['Content-Disposition'] = f'attachment; filename="test.png"'
+            # serializer = VideoSerializer(photo, context={'video': False})
+            # photo_file = serializer.data['video_file']
+
+            # # Encode the photo file content as base64
+            # encoded_string = base64.b64encode(photo_file).decode("utf-8")
+
+            # logger.warning(f"Photo file path/URL: {photo}")
+
+            # response_data = {
+            #     'photo': encoded_string,
+            #     'filename': 'test.png',
+            #     'content_type': 'image/png',
+            #     'name' : photo.name,
+            #     'description' : photo.description
+            # }
+
+            response = HttpResponse(json.dumps(photo), content_type='application/json')
             return response
 
             # video_list = []
@@ -94,3 +109,16 @@ def upload_file_to_s3(file):
     file_url = default_storage.url(file_path)
 
     return file_url
+
+def is_base64(data):
+    try:
+        # Attempt to decode the data using base64
+        decoded_data = base64.b64decode(data)
+        
+        # Check if the decoded data is not empty and consists of valid characters
+        return decoded_data and all(c in (string.ascii_letters + string.digits + '+/=')
+                                    for c in decoded_data.decode('utf-8'))
+    except Exception as e:
+        # Decoding failed or data is not base64-encoded
+        return False
+
