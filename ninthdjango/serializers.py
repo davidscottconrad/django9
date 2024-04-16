@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import MyModel
 from django.db import models
 from .models import Video
+from .models import Thumbnails
 from django.core.files.storage import default_storage
 import logging
 logger = logging.getLogger(__name__)
@@ -53,3 +54,8 @@ class VideoSerializer(serializers.ModelSerializer):
     #     # Retrieve the photo file from S3 using the S3 key
     #     photo_file = default_storage.open(s3_key)
     #     return photo_file
+
+class ThumbnailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Thumbnails
+        fields = '__all__'

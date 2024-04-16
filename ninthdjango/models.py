@@ -12,3 +12,7 @@ class Video(models.Model):
     description = models.TextField()
     video_url = models.URLField(max_length=100000)
     photo_url = models.URLField(max_length=100000)
+
+class Thumbnails(models.Model):
+    image = models.ImageField(upload_to='thumbnails')
+    

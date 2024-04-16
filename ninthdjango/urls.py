@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from ninthdjango import views
 from ninthdjango import VideoView
-
+from ninthdjango import ThumbnailView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('items', views.list),
     path('video/', VideoView.upload_video, name='video'),
+    path('thumbnail/', ThumbnailView.ThumbnailUploadView, name='thumbnail-upload'),
 ]
