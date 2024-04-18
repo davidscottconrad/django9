@@ -16,3 +16,11 @@ class Video(models.Model):
 class Thumbnails(models.Model):
     image = models.ImageField(upload_to='thumbnails')
     
+class VideoMetadata(models.Model):
+    name = models.TextField()
+    description = models.TextField()
+    video_key = models.TextField(blank=True, null=True)
+    photo_key = models.TextField(blank=True, null=True)
+
+class Movies(models.Model):
+    movie = models.FileField(upload_to='movies')

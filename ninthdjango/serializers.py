@@ -3,6 +3,8 @@ from .models import MyModel
 from django.db import models
 from .models import Video
 from .models import Thumbnails
+from .models import VideoMetadata
+from .models import Movies
 from django.core.files.storage import default_storage
 import logging
 logger = logging.getLogger(__name__)
@@ -59,3 +61,13 @@ class ThumbnailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Thumbnails
         fields = '__all__'
+
+class MovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movies
+        fields = '__all__'
+
+class VideoMetadataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMetadata
+        fields = ['id', 'name', 'description', 'video_key', 'photo_key']

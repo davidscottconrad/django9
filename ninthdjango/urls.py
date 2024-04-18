@@ -19,9 +19,14 @@ from django.urls import path
 from ninthdjango import views
 from ninthdjango import VideoView
 from ninthdjango import ThumbnailView
+from ninthdjango import VideoMetadataView
+from ninthdjango import MovieView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('items', views.list),
     path('video/', VideoView.upload_video, name='video'),
     path('thumbnail/', ThumbnailView.ThumbnailUploadView, name='thumbnail-upload'),
+    path('movie-upload/', MovieView.MovieUploadView, name='movie-upload'),
+   
+    path('video-metadata/', VideoMetadataView.video_metadata_list, name='video-metadata-list'),
 ]
