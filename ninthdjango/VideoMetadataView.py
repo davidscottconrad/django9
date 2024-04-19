@@ -4,13 +4,47 @@ from .serializers import VideoMetadataSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+import boto3
+from django.conf import settings
+import logging
 @api_view(['GET', 'POST'])
 def video_metadata_list(request):
+    logger = logging.getLogger(__name__)
+    
     if request.method == 'GET':
-        items = VideoMetadata.objects.all()
-        serializer = VideoMetadataSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        photo_param = request.query_params.get('photo')
+
+        if photo_param:
+            items = VideoMetadata.objects.filter(photo_key__isnull=False)
+            data = []
+
+            for item in items:
+  
+                # Initialize the S3 client
+                s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name='us-east-2')
+                
+                # Generate a signed URL for the photo
+                signed_url = s3.generate_presigned_url(
+                    'get_object',
+                    Params={
+                        'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                        'Key': item.photo_key
+                    },
+                    ExpiresIn=3600  # URL expires in 1 hour
+                )
+                
+                data.append({
+                    'description': item.description,
+                    'name': item.name,
+                    'photo_url': signed_url
+                })
+            
+            return JsonResponse(data, safe=False)
+        
+        else:
+            items = VideoMetadata.objects.all()
+            serializer = VideoMetadataSerializer(items, many=True)
+            return JsonResponse(serializer.data, safe=False)
 
     if request.method == 'POST':
         serializer = VideoMetadataSerializer(data=request.data)
