@@ -34,9 +34,11 @@ def video_metadata_list(request):
                 )
                 
                 data.append({
+                    'id': item.id,
                     'description': item.description,
                     'name': item.name,
                     'photo_url': signed_url
+                    
                 })
             
             return JsonResponse(data, safe=False)

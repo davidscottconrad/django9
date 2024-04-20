@@ -9,50 +9,89 @@ from django.views.decorators.csrf import csrf_exempt
 import boto3
 from botocore.client import Config
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
 @api_view(['GET', 'POST'])
 def ThumbnailUploadView(request):
     if request.method == 'GET':
         # Handle fetching a list of all images
         # Initialize the S3 client
-        s3 = boto3.client('s3',
-                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                          region_name='us-east-2')
+        # logger.warning('hitting GET')
 
-        # Define the bucket name
-        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        video_metadata_id = request.GET.get('id')
+        # logger.info(video_metadata_id)
+        if video_metadata_id:
+            try:
+                video_metadata = VideoMetadata.objects.get(id=video_metadata_id)
+                photo_key = video_metadata.photo_key
+                if photo_key:
+                    # Initialize the S3 client
+                    s3 = boto3.client('s3',
+                                      aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                                      region_name='us-east-2')
 
-        # List objects in the bucket
-        response = s3.list_objects_v2(Bucket=bucket_name, Prefix='images/')
+                    # Define the bucket name
+                    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 
-        # Initialize an empty list to hold image details
-        images = []
+                    # Generate a signed URL for the thumbnail
+                    signed_url = s3.generate_presigned_url(
+                        'get_object',
+                        Params={
+                            'Bucket': bucket_name,
+                            'Key': photo_key
+                        },
+                        ExpiresIn=3600  # URL expires in 1 hour
+                    )
 
-        # Iterate through the objects in the bucket
-        for obj in response.get('Contents', []):
-            # Get the key (path + file name) of the object
-            key = obj['Key']
+                    # Return the signed URL in a JSON response
+                    return JsonResponse({'signed_url': signed_url})
+                else:
+                    return JsonResponse({'error': 'Thumbnail not found for the provided ID'}, status=404)
+            except VideoMetadata.DoesNotExist:
+                return JsonResponse({'error': 'VideoMetadata not found'}, status=404)
+        else:
+            s3 = boto3.client('s3',
+                            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                            region_name='us-east-2')
 
-            # Generate a signed URL for the file
-            signed_url = s3.generate_presigned_url(
-                'get_object',
-                Params={
-                    'Bucket': bucket_name,
-                    'Key': key
-                },
-                ExpiresIn=3600  # URL expires in 1 hour
-            )
+            # Define the bucket name
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 
-            # Append the details of the image to the list
-            images.append({
-                'key': key,
-                'signed_url': signed_url
+            # List objects in the bucket
+            response = s3.list_objects_v2(Bucket=bucket_name, Prefix='images/')
+
+            # Initialize an empty list to hold image details
+            images = []
+
+            # Iterate through the objects in the bucket
+            for obj in response.get('Contents', []):
+                # Get the key (path + file name) of the object
+                key = obj['Key']
+
+                # Generate a signed URL for the file
+                signed_url = s3.generate_presigned_url(
+                    'get_object',
+                    Params={
+                        'Bucket': bucket_name,
+                        'Key': key
+                    },
+                    ExpiresIn=3600  # URL expires in 1 hour
+                )
+
+                # Append the details of the image to the list
+                images.append({
+                    'key': key,
+                    'signed_url': signed_url
+                })
+
+            # Return the list of images with their signed URLs in a JSON response
+            return JsonResponse({
+                'images': images
             })
-
-        # Return the list of images with their signed URLs in a JSON response
-        return JsonResponse({
-            'images': images
-        })
 
     # Return a 405 Method Not Allowed response if the request method is neither POST nor GET
 
