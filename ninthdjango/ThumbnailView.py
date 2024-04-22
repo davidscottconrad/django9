@@ -132,9 +132,16 @@ def ThumbnailUploadView(request):
             ExpiresIn=3600  # URL expires in 1 hour
         )
         
+        backgroundOrnot= request.GET.get('background')
+        logger.error(f'upload background vairable:: {backgroundOrnot}')
+        if(request.GET.get('background')):
+            video_metadata.background_key = key
         # Update the VideoMetadata object with the signed URL
-        video_metadata.photo_key = key
+        else:
+            logger.error('hitting else')
+            video_metadata.photo_key = key
         video_metadata.save()
+
         
         # Return the signed URL in the JSON response
         return JsonResponse({'signed_url': signed_url})

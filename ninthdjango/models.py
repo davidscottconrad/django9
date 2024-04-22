@@ -21,6 +21,7 @@ class VideoMetadata(models.Model):
     description = models.TextField()
     video_key = models.TextField(blank=True, null=True)
     photo_key = models.TextField(blank=True, null=True)
+    background_key = models.TextField(blank=True, null=True)
 
 class Movies(models.Model):
     movie = models.FileField(upload_to='movies')
