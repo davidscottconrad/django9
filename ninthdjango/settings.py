@@ -32,7 +32,7 @@ if "DATABASE_URL" in environ:
     secrets = environ.get("DATABASE_URL")
     SECRET_KEY = json.loads(secrets)["SECRET_KEY"]
     ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me", "https://www.paramountminus.me"]
-    DEBUG = True
+    DEBUG = False
 
 else: 
     SECRET_KEY = env('SECRET_KEY')
