@@ -10,7 +10,7 @@ Check out the live demo of the Paramount+ clone at: [paramountminus.me](https://
 
 The Paramount+ clone consists of two separate repositories for the frontend and backend:
 
-- Frontend: [https://github.com/davidscottconrad/frontend-netflax](https://github.com/davidscottconrad/frontend-netflax)
+- Frontend: [https://github.com/davidscottconrad/Paramountminus-Frontend](https://github.com/davidscottconrad/Paramountminus-Frontend)
 - Backend: [https://github.com/davidscottconrad/django9](https://github.com/davidscottconrad/django9)
 
 ## Technologies Used
@@ -59,6 +59,6 @@ The entire application is containerized using Docker, ensuring a consistent and 
 
 For any inquiries or questions, feel free to reach out to me:
 
-- [Resume](https://github.com/davidscottconrad/frontend-netflax/blob/main/public/Resume.pdf)
+- [Resume](https://github.com/davidscottconrad/Paramountminus-Frontend/blob/main/public/Resume.pdf)
 - Email: David.Scott.Conrad@gmail.com
 - LinkedIn: [Your LinkedIn](https://linkedin.com/in/david-scott-conrad)
