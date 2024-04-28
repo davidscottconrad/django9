@@ -9,6 +9,7 @@ import uuid
 from django.http import HttpResponse
 import logging
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 @api_view(['GET','POST'])
@@ -64,6 +65,7 @@ def upload_video(request):
             # return Response(video_list)
         
     if request.method == 'POST':
+        return JsonResponse({'error': 'Removed For Production'}, status=405)
         serializer = VideoUploadSerializer(data=request.data)
         if serializer.is_valid():
             name = serializer.validated_data['name']

@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if "DATABASE_URL" in environ:
     secrets = environ.get("DATABASE_URL")
     SECRET_KEY = json.loads(secrets)["SECRET_KEY"]
-    ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me"]
+    ALLOWED_HOSTS = [".awsapprunner.com", "https://www.netflax.me", "https://www.paramountminus.me"]
     DEBUG = True
 
 else: 
@@ -73,6 +73,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://main.dnbfl0efjxfzm.amplifyapp.com',
     "https://pyhnqwzimi.us-east-2.awsapprunner.com",
     'https://www.netflax.me',
+    'https://www.paramountminus.me',
 ]
 
 ROOT_URLCONF = 'ninthdjango.urls'

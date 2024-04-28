@@ -57,6 +57,7 @@ def video_metadata_list(request):
             return JsonResponse(serializer.data, safe=False)
 
     if request.method == 'POST':
+        return JsonResponse({'error': 'Removed For Production'}, status=405)
         serializer = VideoMetadataSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

@@ -89,6 +89,7 @@ def MovieUploadView(request):
             })
 
     elif request.method == 'POST':
+        return JsonResponse({'error': 'Removed For Production'}, status=405)
         # Access the uploaded video file from the request's FILES dictionary
         uploaded_file = request.FILES.get('video')
         if not uploaded_file:

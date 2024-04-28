@@ -13,6 +13,7 @@ def list(request):
         return JsonResponse(serializer.data, safe=False) 
     # if request.method == 'POST':
     if request.method == 'POST': 
+        return JsonResponse({'error': 'Removed For Production'}, status=405)
         serializer = MyModelSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
